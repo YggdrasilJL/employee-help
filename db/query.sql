@@ -1,0 +1,11 @@
+SELECT *
+FROM Department ON 
+JOIN 
+
+SELECT *
+FROM 
+JOIN 
+
+SELECT *
+FROM 
+JOIN 

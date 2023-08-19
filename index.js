@@ -1,12 +1,13 @@
 const inquirer = require('inquirer');
 const {
-    viewEmployees, viewRoles, viewDepartment, addEmployee,
-    updateRole, addDepartment, addRole, seeBudget
+    displayEmployees, displayRoles, displayDepartments, addedEmployee,
+    updatedRole, addedDepartment, addedRole, displayBudget
 } = require('./db/queries');
 
 
-menu();
 
+
+menu()
 async function menu() {
     console.log(`
     __________               .__                                        _____                              ____                  
@@ -34,40 +35,80 @@ async function menu() {
                     'Quit'],
             name: 'action'
         })
-        .then(async data => {
+        .then(data => {
             switch (data.action) {
                 case 'View all employees':
-                    await viewEmployees();
+                    viewEmployees();
                     break;
                 case 'Add an employee':
-                    await addEmployee();
+                    addEmployee();
                     break;
                 case 'Update employee role':
-                    await updateRole();
+                    updateRole();
                     break;
                 case 'View all roles':
-                    await viewRoles();
+                    viewRoles();
                     break;
                 case 'Add a role':
-                    await addRole();
+                    addRole();
                     break;
                 case 'View all departments':
-                    await viewDepartment();
+                    viewDepartments();
                     break;
                 case 'Add department':
-                    await addDepartment();
+                    addDepartment();
                     break;
                 case 'See annual utilized budget':
-                    await seeBudget();
+                    viewBudget();
                     break;
                 case 'Quit':
-                    await quit();
+                    quit();
                     break;
             }
         })
         .catch(err => {
             console.error("error:", err);
         });
+}
+
+async function viewEmployees() {
+    await displayEmployees()
+    menu()
+}
+
+async function viewRoles() {
+    await displayRoles()
+    menu()
+}
+
+async function viewDepartments() {
+    await displayDepartments()
+    menu()
+}
+
+async function addEmployee() {
+    await addedEmployee()
+    menu()
+}
+
+async function addDepartment() {
+    await addedDepartment()
+    menu()
+}
+
+async function addRole() {
+    await addedRole()
+    menu()
+}
+
+async function updateRole() {
+    await updatedRole()
+    menu()
+}
+
+async function viewBudget() {
+    await displayBudget()
+    menu()
 }
 
 async function quit() {
@@ -81,13 +122,9 @@ async function quit() {
             }
         )
         .then(async data => {
-            if (data.quit === 'Yes') {
-                process.exit();
-            } else {
-                menu();
-            }
+            await data.quit === 'Yes' ? process.exit() : menu()
         })
         .catch(err => {
-            console.error("error:", err);
-        });
+            console.error("error:", err)
+        })
 }

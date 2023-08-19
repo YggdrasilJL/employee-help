@@ -2,49 +2,56 @@ const inquirer = require('inquirer');
 require('dotenv').config();
 const connection = require('../config/connection')
 
-async function viewEmployeesI() {
-    const allEmployees =
-        await connection.promise().query(
+
+async function displayEmployees() {
+    try {
+        const [allEmployees] = await connection.promise().query(
             `SELECT 
-        emp.id AS employee_id,
-        emp.first_name,
-        emp.last_name,
-        rl.Job_Title AS job_title,
-        dep.Department AS department,
-        rl.Salary,
-        CONCAT(mgr.first_name, ' ', mgr.last_name) AS manager
-     FROM Employees emp
-     LEFT JOIN Roles rl ON emp.Role_id = rl.id
-     LEFT JOIN Departments dep ON rl.Department_id = dep.id
-     LEFT JOIN Employees mgr ON emp.Manager_id = mgr.id;`
+                Employees.id AS Employees_id,
+                Employees.First_Name,
+                Employees.Last_Name,
+                Roles.id AS Roles_id,
+                Departments.Department,
+                Roles.Salary,
+                CONCAT(manager.First_Name, ' ', manager.Last_name) AS Manager
+            FROM Employees
+            LEFT JOIN Roles ON Employees.Role_id = Roles.id
+            LEFT JOIN Departments ON Roles.Department_id = Departments.id
+            LEFT JOIN Employees manager ON Employees.Manager_id = manager.id;`
         );
-    console.table(allEmployees);
+
+        console.table(allEmployees);
+    } catch (error) {
+        console.error("Error:", error);
+    }
 }
 
-async function viewRoles() {
-    const roles = await connection.promise().query(
-        'select * from role'
-    )
-    console.table(roles)
+async function displayRoles() {
+    const roles = await connection.promise().query('SELECT * from Roles');
+    console.table(roles);
 }
 
-async function viewDepartmentsI() {
-    const departments = await connection.promise().query(
-        'select * from department'
-    )
-    console.table(departments)
-}
+// async function displayDepartments() {
+//     const departments = await connection.promise().query('SELECT id, Department FROM Departments');
+//     console.table(departments);
+// }
 
-async function addEmployee() {
-    const roles = await connection.promise().query('select * from role');
+displayDepartments = () => {
 
+    connection.query("select id, Department from Departments", function (err, results) {
+        err ? console.log(err) : console.table(results);
 
+    });
+};
+
+async function addedEmployee() {
+    const roles = await connection.promise().query('select * from Roles');
     const roleChoices = roles.map(role => ({
         name: role.title,
         value: role.id
     }));
 
-    const employees = await connection.promise().query('select * from employee');
+    const employees = await connection.promise().query('select * from Employees');
     const employeeChoices = employees.map(employee => ({
         name: `${employee.first_name} ${employee.last_name}`,
         value: employee.id
@@ -84,10 +91,10 @@ async function addEmployee() {
             const managerId = data.empManager === 'NO MANAGER' ? null : data.empManager;
 
             await connection.promise().query(
-                'insert into employee (first_name, last_name, role_id, manager_id) values (?, ?, ?, ?)',
+                'insert into Employees (First_Name, Last_Name, Role_id, Manager_id) values (?, ?, ?, ?)',
                 [data.firstName, data.lastName, data.role, managerId]
             );
-            console.info(data.firstName, 'added!');
+            console.info(data.first_name, 'added!');
         })
         .catch(err => {
             console.error("error:", err);
@@ -95,14 +102,11 @@ async function addEmployee() {
 }
 
 
-async function addRoleI() {
-    const departments = await connection.promise().query(
-        'select * from department'
-    )
+async function addedRole() {
+    const departments = await connection.promise().query('SELECT * FROM Departments');
     const departmentChoices = departments.map(department => ({
-        name: department.departments,
-        value: department.id
-    }))
+        name: department.Department,
+    }));
     await inquirer
         .prompt([
             {
@@ -135,7 +139,7 @@ async function addRoleI() {
         })
 }
 
-async function updateRoleI() {
+async function updatedRole() {
     const employees = await connection.promise().query(
         'select * from employee',
     )
@@ -153,10 +157,10 @@ async function updateRoleI() {
             }
         ])
         .then(async data => {
-            const [roles, fields] = await connection.promise()
+            const roles = await connection.promise()
                 .query('select * from role')
             const roleChoices = roles.map(role => ({
-                name: role.title,
+                name: role.Title,
                 value: role.id
             }))
 
@@ -171,7 +175,7 @@ async function updateRoleI() {
                 )
                 .then(async roleData => {
                     await connection.promise().query(
-                        'update employee set role_id = ? where id = ?',
+                        'update Employees set role_id = ? where id = ?',
                         [roleData.roleId, data.employeeId]
                     )
                     console.log('Role updated')
@@ -185,7 +189,7 @@ async function updateRoleI() {
         })
 }
 
-async function addDepartmentI() {
+async function addedDepartment() {
     await inquirer
         .prompt(
             {
@@ -197,29 +201,29 @@ async function addDepartmentI() {
         )
         .then(async department => {
             await connection.promise().query(
-                `insert into department (departmen) value ('${departments.addDepartmentI}')`
+                `insert into Departments (department) value ('${department.addedDepartment}')`
             )
-            console.info(department.addDepartmentI, 'department added.')
+            console.info(department.addedDepartment, 'department added.')
         })
         .catch(err => {
             console.error("error:", err)
         })
 }
-async function calculateBudget() {
+async function calculatedBudget() {
     const budget = await connection.promise().query(
 
         `SELECT dep.department_name AS department, SUM(rl.salary) AS utilized_budget
-       FROM employee emp
+       FROM Employees emp
        LEFT JOIN role rl ON emp.role_id = rl.id
-       LEFT JOIN department dep ON rl.department_id = dep.id
+       LEFT JOIN Departments dep ON rl.department_id = dep.id
        GROUP BY department`
     )
 
     return budget
 }
 
-async function seeBudget() {
-    const budgetData = await calculateBudget()
+async function displayBudget() {
+    const budgetData = await calculatedBudget()
     console.table(budgetData)
 }
 
@@ -258,6 +262,6 @@ const salaryValidator = async (input) => {
 }
 
 module.exports = {
-    viewEmployeesI, viewRolesI, viewDepartmentsI, addEmployeeI,
-    updateRoleI, addDepartmentI, addRoleI, seeBudgetI
+    displayEmployees, displayRoles, displayDepartments, addedEmployee,
+    updatedRole, addedDepartment, addedRole, displayBudget
 }

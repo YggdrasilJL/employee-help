@@ -1,5 +1,5 @@
 
-INSERT INTO Departments ( Department) VALUES
+INSERT INTO departments ( department) VALUES
   ( 'Analytics'),
   ( 'Sales'),
   ( 'Engineering'),
@@ -12,7 +12,7 @@ INSERT INTO Departments ( Department) VALUES
   ( 'Acquisition');
 
 
-INSERT INTO Roles ( Title, Salary, Department_id) VALUES
+INSERT INTO roles ( title, salary, department_id) VALUES
   ( 'CEO', 837000, 11),
   ( 'Marketing Advisor', 75000, 4),
   ( 'Lead Software Engineer', 137000, 3),
@@ -29,7 +29,7 @@ INSERT INTO Roles ( Title, Salary, Department_id) VALUES
   ( 'CFO', 231000, 10);
 
 
-INSERT INTO Employees ( First_Name, Last_Name, Role_id, Manager_id) VALUES
+INSERT INTO employees ( first_name, last_lame, role_id, manager_id) VALUES
   ( 'John', 'JongleheimerSchmidt', 1, 1),
   ( 'Joan', 'Rivers', 2, 2),
   ( 'Alice', 'Slooooon', 3, 5),

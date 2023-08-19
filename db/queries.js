@@ -4,37 +4,36 @@ const connection = require('../config/connection')
 
 
 async function displayEmployees() {
-    try {
-        const [allEmployees] = await connection.promise().query(
-            `SELECT 
-                Employees.id AS Employees_id,
-                Employees.First_Name,
-                Employees.Last_Name,
-                Roles.id AS Roles_id,
-                Departments.Department,
-                Roles.Salary,
-                CONCAT(manager.First_Name, ' ', manager.Last_name) AS Manager
-            FROM Employees
-            LEFT JOIN Roles ON Employees.Role_id = Roles.id
-            LEFT JOIN Departments ON Roles.Department_id = Departments.id
-            LEFT JOIN Employees manager ON Employees.Manager_id = manager.id;`
-        );
 
-        console.table(allEmployees);
-    } catch (error) {
-        console.error("Error:", error);
-    }
+    const [allEmployees, employeefields] = await connection.promise().query(
+        `SELECT 
+        Employees.id AS Employees_id,
+        Employees.First_Name,
+        Employees.Last_Name,
+        Roles.Title AS Roles.Title,
+        Departments.Department AS Department,
+        Roles.Salary,
+        CONCAT(manager.First_Name, ' ', manager.Last_name) AS Manager
+    FROM Employees
+    LEFT JOIN Roles ON Employees.Role_id = Roles.id
+    LEFT JOIN Departments ON Roles.Department_id = Departments.id
+    LEFT JOIN Employees manager ON Employees.Manager_id = manager.id;`
+    );
+
+    console.table(allEmployees);
+
 }
 
+
 async function displayRoles() {
-    const roles = await connection.promise().query('SELECT * from Roles');
+    const [roles, rolesFields] = await connection.promise().query('SELECT * FROM Roles');
     console.table(roles);
 }
 
-// async function displayDepartments() {
-//     const departments = await connection.promise().query('SELECT id, Department FROM Departments');
-//     console.table(departments);
-// }
+async function displayDepartments() {
+    const [departments, departmentFields] = await connection.promise().query('SELECT * FROM Departments');
+    console.table(departments);
+}
 
 displayDepartments = () => {
 
@@ -45,15 +44,15 @@ displayDepartments = () => {
 };
 
 async function addedEmployee() {
-    const roles = await connection.promise().query('select * from Roles');
+    const roles = await connection.promise().query('SELECT * FROM Roles');
     const roleChoices = roles.map(role => ({
-        name: role.title,
+        name: role.Title,
         value: role.id
     }));
 
-    const employees = await connection.promise().query('select * from Employees');
+    const employees = await connection.promise().query('SELECT * FROM Employees');
     const employeeChoices = employees.map(employee => ({
-        name: `${employee.first_name} ${employee.last_name}`,
+        name: `${employee.First_Name} ${employee.Last_Name}`,
         value: employee.id
     }));
 
@@ -94,7 +93,7 @@ async function addedEmployee() {
                 'insert into Employees (First_Name, Last_Name, Role_id, Manager_id) values (?, ?, ?, ?)',
                 [data.firstName, data.lastName, data.role, managerId]
             );
-            console.info(data.first_name, 'added!');
+            console.info(data.First_Name, 'added!');
         })
         .catch(err => {
             console.error("error:", err);
@@ -106,6 +105,7 @@ async function addedRole() {
     const departments = await connection.promise().query('SELECT * FROM Departments');
     const departmentChoices = departments.map(department => ({
         name: department.Department,
+        value: departments.id
     }));
     await inquirer
         .prompt([
@@ -130,7 +130,7 @@ async function addedRole() {
         ])
         .then(async data => {
             await connection.promise().query(
-                `insert into role (title, salary, department_id) values ('${data.roleName}','${data.salary}', ${data.department})`
+                `INSERT INTO Roles (Title, Salary, Department_id) values ('${data.roleName}','${data.salary}', ${data.department})`
             )
             console.info(data.roleName, 'role added')
         })
@@ -140,11 +140,9 @@ async function addedRole() {
 }
 
 async function updatedRole() {
-    const employees = await connection.promise().query(
-        'select * from employee',
-    )
+    const employees = await connection.promise().query('SELECT * FROM Employees',)
     const employeeChoices = employees.map(employee => ({
-        name: `${employee.first_name} ${employee.last_name}`,
+        name: `${employee.First_Name} ${employee.Last_Name}`,
         value: employee.id
     }))
     await inquirer
@@ -201,7 +199,7 @@ async function addedDepartment() {
         )
         .then(async department => {
             await connection.promise().query(
-                `insert into Departments (department) value ('${department.addedDepartment}')`
+                `INSERT INTO Departments (Department) VALUE ('${department.addedDepartment}')`
             )
             console.info(department.addedDepartment, 'department added.')
         })
@@ -212,10 +210,10 @@ async function addedDepartment() {
 async function calculatedBudget() {
     const budget = await connection.promise().query(
 
-        `SELECT dep.department_name AS department, SUM(rl.salary) AS utilized_budget
+        `SELECT dep.depart AS Department, SUM(rl.salary) AS utilized_budget
        FROM Employees emp
-       LEFT JOIN role rl ON emp.role_id = rl.id
-       LEFT JOIN Departments dep ON rl.department_id = dep.id
+       LEFT JOIN Roles r ON emp.Roles_id = r.id
+       LEFT JOIN Departments dep ON r.Department_id = dep.id
        GROUP BY department`
     )
 

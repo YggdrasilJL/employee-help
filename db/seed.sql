@@ -1,5 +1,5 @@
 
-INSERT INTO Departments (id, Department) VALUES
+INSERT INTO Departments ( Department) VALUES
   ( 'Analytics'),
   ( 'Sales'),
   ( 'Engineering'),
@@ -12,7 +12,7 @@ INSERT INTO Departments (id, Department) VALUES
   ( 'Acquisition');
 
 
-INSERT INTO Roles ( Title, Salary, Departments_id) VALUES
+INSERT INTO Roles ( Title, Salary, Department_id) VALUES
   ( 'CEO', 837000, 11),
   ( 'Marketing Advisor', 75000, 4),
   ( 'Lead Software Engineer', 137000, 3),

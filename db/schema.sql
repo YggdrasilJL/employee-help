@@ -2,6 +2,10 @@ DROP DATABASE IF EXISTS management_db;
 CREATE DATABASE management_db;
 USE management_db;
 
+DROP TABLE IF EXISTS Employees
+DROP TABLE IF EXISTS Departments;
+DROP TABLE IF EXISTS Roles;
+DROP TABLE IF EXISTS Budgets;
 
 CREATE TABLE Departments (
   id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,5 +1,5 @@
 
-INSERT INTO departments ( department) VALUES
+INSERT INTO Departments (Department) VALUES
   ( 'Analytics'),
   ( 'Sales'),
   ( 'Engineering'),
@@ -12,7 +12,7 @@ INSERT INTO departments ( department) VALUES
   ( 'Acquisition');
 
 
-INSERT INTO roles ( title, salary, department_id) VALUES
+INSERT INTO roles ( Title, Salary, Department_id) VALUES
   ( 'CEO', 837000, 11),
   ( 'Marketing Advisor', 75000, 4),
   ( 'Lead Software Engineer', 137000, 3),
@@ -29,21 +29,22 @@ INSERT INTO roles ( title, salary, department_id) VALUES
   ( 'CFO', 231000, 10);
 
 
-INSERT INTO employees ( first_name, last_lame, role_id, manager_id) VALUES
-  ( 'John', 'JongleheimerSchmidt', 1, 1),
-  ( 'Joan', 'Rivers', 2, 2),
-  ( 'Alice', 'Slooooon', 3, 5),
-  ( 'Verica', 'Eureka', 4, NULL),
-  ( 'Cliff', 'McGinty', 5, NULL),
-  ( 'Jeff', 'Elstein', 6, 1),
-  ( 'Barb', 'Longlip', 7, 1),
-  ( 'Margery', 'Simps', 8, 1),
-  ( 'Gregory', 'Bellsabob', 9, 1),
-  ( 'Jackie', 'Twoteeth', 10, 1),
-  ( 'Montgomery', 'Welldone', 11, 2),
-  ( 'Philip J.', 'Fish', 12, 1),
-  ( 'John', 'Zoidbergus', 13, 1),
-  ( 'Turanga', 'Leela', 14, 1),
-  ( 'Reagan', 'Nyght', 4, 7),
-  ( 'Sloan', 'Kripe', 14, 7),
-  ( 'Alexander', 'Schmidt', 4, 7);
+INSERT INTO Employees (First_Name, Last_Name, Role_id, Manager_id) VALUES
+  ('John', 'JongleheimerSchmidt', 1, 1),
+  ('Joan', 'Rivers', 2, 2),
+  ('Alice', 'Slooooon', 3, 5),
+  ('Verica', 'Eureka', 4, NULL),
+  ('Cliff', 'McGinty', 5, NULL),
+  ('Jeff', 'Elstein', 6, 1),
+  ('Barb', 'Longlip', 7, 1),
+  ('Margery', 'Simps', 8, 1),
+  ('Gregory', 'Bellsabob', 9, 1),
+  ('Jackie', 'Twoteeth', 10, 1),
+  ('Montgomery', 'Welldone', 11, 2),
+  ('Philip J.', 'Fish', 12, 1),
+  ('John', 'Zoidbergus', 13, 1),
+  ('Turanga', 'Leela', 14, 1),
+  ('Reagan', 'Nyght', 4, 7),
+  ('Sloan', 'Kripe', 14, 7),
+  ('Alexander', 'Schmidt', 4, 7);
+

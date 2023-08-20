@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS management_db;
 CREATE DATABASE management_db;
 USE management_db;
 
-DROP TABLE IF EXISTS Employees
+DROP TABLE IF EXISTS Employees;
 DROP TABLE IF EXISTS Departments;
 DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Budgets;
@@ -18,7 +18,7 @@ CREATE TABLE Roles (
   Title VARCHAR(30) NOT NULL,
   Salary DECIMAL(10, 2) NOT NULL,
   Department_id INT NOT NULL,
-  FOREIGN KEY (Department_id) REFERENCES Departments(id) ON DELETE SET NULL
+  FOREIGN KEY (Department_id) REFERENCES Departments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Employees (
@@ -27,7 +27,7 @@ CREATE TABLE Employees (
   Last_Name VARCHAR(30) NOT NULL,
   Role_id INT,
   Manager_id INT,
-  FOREIGN KEY (Role_id) REFERENCES Roles(id) ON DELETE SET NULL,
+  FOREIGN KEY (Role_id) REFERENCES Roles(id) ON DELETE CASCADE,
   FOREIGN KEY (Manager_id) REFERENCES Employees(id)
 );
 
